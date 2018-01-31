@@ -23,10 +23,11 @@ X, Y = np.meshgrid(X, Y) #creates a rectangular grid on which to plot the functi
 #Z = X**2-Y**2
 Z = X**4 -X**3 - 20*X**2 + X + 1 + Y**4 - Y**3 - 20*Y**2 + Y + 1
 my_col = cm.jet(Z/np.amax(Z))
+#my_col = cm.jet(Z)
 surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, facecolors = my_col,linewidth=0, antialiased=False) #plot definition and options
 
 #Runs the plot command
-plt.show()
+#plt.show()
 
 X = np.arange(-5, 5, 0.25)
 Y = np.arange(-5, 5, 0.25) 
@@ -37,17 +38,22 @@ def f(X,Y):
 	return (X-Y)**4+2*X**2+Y**2-X+2*Y
 
 def f2(x,y):
-	
 	return x**2-y**2
 	
-'''print np.min(f(X,Y))
-print np.argmin(f(X,Y))
-print f(X,Y)[6][8]
-print np.arange(-2, 2, 0.25)[6], np.arange(-2, 2, 0.25)[8]'''
+def f3(X,Y):
+	return X**4 -X**3 - 20*X**2 + X + 1 + Y**4 - Y**3 - 20*Y**2 + Y + 1
+	
+#print np.min(f3(X,Y))
+#print np.argmin(f3(X,Y))
+#print f(X,Y)[6][8]
+#print np.arange(-2, 2, 0.25)[6], np.arange(-2, 2, 0.25)[8]
 
 #gradient de la fonction à optimiser
 def g(x,y):
 	return [4*(x-y)**3+4*x-1, -4*(x-y)**3 +2*(y+1)]
+	
+def g3(x,y):
+	return [4*x**3-3*x**2-40*x+1, 4*y**3-3*y**2-40*y+1]
 	
 def g2(x,y):
 	return [2*x, -2*y]
@@ -66,7 +72,7 @@ def descente(f,g, alpha, X0):
 	xlist.append(x)
 	ylist.append(y)
 	zlist.append(z)
-	while np.linalg.norm(d)>0.001:	
+	while k<20:	
 		d = g(x,y)
 		dlist.append(np.linalg.norm(d))
 		x -= alpha*d[0]
@@ -93,19 +99,23 @@ def h(x,y):
 def h2(x,y):
 	return np.matrix([[2 ,0],[0,-2]])
 	
+
+def h3(x,y):
+	return np.matrix([[12*x**2-6*x-40 ,0],[0,12*y**2-6*y-40]])
 	
-'''x1, y1, z1 = descente(f2,g2,0.01, [4,0])
-x2, y2, z2 = descente(f2,g2,0.001, [-2,0])
-x3, y3, z3 = descente(f2,g2,0.009, [1.5,-0.7])
-x4, y4, z4 = descente(f2,g2,0.009, [-2,-1.5])
+	
+'''x1, y1, z1 = descente(f3,g3,0.01, [3,4])
+x2, y2, z2 = descente(f3,g3,0.01, [-3,-3])
+x3, y3, z3 = descente(f3,g3,0.01, [-4,-3])
+#x4, y4, z4 = descente(f3,g3,0.009, [0.5,-0.5])
 
 ax.plot(x1, y1, z1, color = "orange")
 ax.plot(x2, y2, z2, color = "r")
-
-plt.show()
 ax.plot(x3, y3, z3, color = "yellow")
-ax.plot(x4, y4, z4, color = "pink")
-plt.show()'''
+#ax.plot(x4, y4, z4, color = "green")
+plt.show()
+'''
+
 
 def descenteNewton(f,g, h, alpha, X0):
 	x = X0[0]
@@ -120,7 +130,7 @@ def descenteNewton(f,g, h, alpha, X0):
 	xlist.append(x)
 	ylist.append(y)
 	zlist.append(z)
-	while np.linalg.norm(d)>0.001:	
+	while np.linalg.norm(d)>0.0001:	
 		d = np.dot(g(x,y),np.linalg.inv(h(x,y)))
 		d = d.tolist()[0]
 		dlist.append(np.linalg.norm(d))
@@ -135,8 +145,8 @@ def descenteNewton(f,g, h, alpha, X0):
 	print(np.linalg.norm(d),k)		
 	return xlist, ylist, zlist
 		
-'''x1, y1, z1 = descenteNewton(f2,g2,h2,0.009, [4,0])
-x2, y2, z2 = descenteNewton(f2,g2,h2,0.009, [3,-3])
+x1, y1, z1 = descenteNewton(f3,g3,h3,0.009, [0.5,0.5])
+x2, y2, z2 = descenteNewton(f3,g3,h3,0.009, [1,-2])
 #x3, y3, z3 = descenteNewton(f,g,h,0.009, [-1,-1])
 
 #x3, y3, z3 = descenteNewton(f,g,h,0.009, [1,1])
@@ -146,4 +156,4 @@ ax.plot(x1, y1, z1, color = "orange")
 ax.plot(x2, y2, z2, color = "r")
 #ax.plot(x3, y3, z3, color = "yellow")
 #ax.plot(x4, y4, z4, color = "green")
-plt.show()'''
+plt.show()
