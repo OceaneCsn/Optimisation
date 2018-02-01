@@ -88,7 +88,7 @@ def descente(f,g, alpha, X0):
 	#plt.plot(range(0,k),dlist)
 	#plt.show()
 	#print "Descente en ",k,"itérations.\nCoordonnées de l'optimum : ", x,y,z, "\nDerniere valeur de la norme de d :",np.linalg.norm(d)
-	print(np.linalg.norm(d),k)		
+	print(np.linalg.norm(d),k,z)		
 	return xlist, ylist, zlist
 	
 
@@ -104,17 +104,17 @@ def h3(x,y):
 	return np.matrix([[12*x**2-6*x-40 ,0],[0,12*y**2-6*y-40]])
 	
 	
-'''x1, y1, z1 = descente(f3,g3,0.01, [3,4])
-x2, y2, z2 = descente(f3,g3,0.01, [-3,-3])
-x3, y3, z3 = descente(f3,g3,0.01, [-4,-3])
-#x4, y4, z4 = descente(f3,g3,0.009, [0.5,-0.5])
+'''x1, y1, z1 = descente(f3,g3,0.01, [-0.5,-0.5])
+x2, y2, z2 = descente(f3,g3,0.01, [-0.5,0.5])
+x3, y3, z3 = descente(f3,g3,0.01, [0.5,0.5])
+x4, y4, z4 = descente(f3,g3,0.009, [0.5,-0.5])
 
 ax.plot(x1, y1, z1, color = "orange")
 ax.plot(x2, y2, z2, color = "r")
 ax.plot(x3, y3, z3, color = "yellow")
-#ax.plot(x4, y4, z4, color = "green")
-plt.show()
-'''
+ax.plot(x4, y4, z4, color = "green")
+plt.show()'''
+
 
 
 def descenteNewton(f,g, h, alpha, X0):
@@ -142,18 +142,18 @@ def descenteNewton(f,g, h, alpha, X0):
 		zlist.append(z)
 		k = k+1
 	#print(z)
-	print(np.linalg.norm(d),k)		
+	print(np.linalg.norm(d),k, z)		
 	return xlist, ylist, zlist
 		
 x1, y1, z1 = descenteNewton(f3,g3,h3,0.009, [0.5,0.5])
 x2, y2, z2 = descenteNewton(f3,g3,h3,0.009, [1,-2])
-#x3, y3, z3 = descenteNewton(f,g,h,0.009, [-1,-1])
+x3, y3, z3 = descenteNewton(f3,g3,h3,0.009, [-1,-1])
 
 #x3, y3, z3 = descenteNewton(f,g,h,0.009, [1,1])
-#x4, y4, z4 = descenteNewton(f,g,h,0.009, [-2,-1.5])
+x4, y4, z4 = descenteNewton(f3,g3,h3,0.009, [0,-0.5])
 
 ax.plot(x1, y1, z1, color = "orange")
 ax.plot(x2, y2, z2, color = "r")
-#ax.plot(x3, y3, z3, color = "yellow")
-#ax.plot(x4, y4, z4, color = "green")
+ax.plot(x3, y3, z3, color = "yellow")
+ax.plot(x4, y4, z4, color = "green")
 plt.show()
