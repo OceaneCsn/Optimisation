@@ -6,7 +6,7 @@ import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 
-mpl.use('qt4agg')
+#mpl.use('qt4agg')
 
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as plt
@@ -63,6 +63,7 @@ def descente(f,g, alpha, X0):
 	x = X0[0]
 	y = X0[1]
 	z = f(x,y)
+	zav = z
 	k = 0
 	dlist = []
 	d = g(x,y)
@@ -72,7 +73,8 @@ def descente(f,g, alpha, X0):
 	xlist.append(x)
 	ylist.append(y)
 	zlist.append(z)
-	while k<20:	
+	while zav>=z:
+		zav = z
 		d = g(x,y)
 		dlist.append(np.linalg.norm(d))
 		x -= alpha*d[0]
@@ -104,17 +106,18 @@ def h3(x,y):
 	return np.matrix([[12*x**2-6*x-40 ,0],[0,12*y**2-6*y-40]])
 	
 	
-'''x1, y1, z1 = descente(f3,g3,0.01, [-0.5,-0.5])
-x2, y2, z2 = descente(f3,g3,0.01, [-0.5,0.5])
-x3, y3, z3 = descente(f3,g3,0.01, [0.5,0.5])
-x4, y4, z4 = descente(f3,g3,0.009, [0.5,-0.5])
+x1, y1, z1 = descente(f2,g2,0.09, [0,0])
+x2, y2, z2 = descente(f2,g2,0.01, [-5,-5])
+x3, y3, z3 = descente(f3,g3,0.01, [-4,3])
+'''x4, y4, z4 = descente(f3,g3,0.009, [0.5,-0.5])'''
 
 ax.plot(x1, y1, z1, color = "orange")
 ax.plot(x2, y2, z2, color = "r")
 ax.plot(x3, y3, z3, color = "yellow")
-ax.plot(x4, y4, z4, color = "green")
-plt.show()'''
+#ax.plot(x4, y4, z4, color = "green")
+#plt.show()
 
+#surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, facecolors = my_col,linewidth=0, antialiased=False) 
 
 
 def descenteNewton(f,g, h, alpha, X0):
@@ -145,15 +148,21 @@ def descenteNewton(f,g, h, alpha, X0):
 	print(np.linalg.norm(d),k, z)		
 	return xlist, ylist, zlist
 		
-x1, y1, z1 = descenteNewton(f3,g3,h3,0.009, [0.5,0.5])
-x2, y2, z2 = descenteNewton(f3,g3,h3,0.009, [1,-2])
-x3, y3, z3 = descenteNewton(f3,g3,h3,0.009, [-1,-1])
+x1, y1, z1 = descenteNewton(f3,g3,h3,0.01, [3,4])
+x2, y2, z2 = descenteNewton(f3,g3,h3,0.01, [-3,-3])
+x3, y3, z3 = descenteNewton(f3,g3,h3,0.01, [-4,3])
 
 #x3, y3, z3 = descenteNewton(f,g,h,0.009, [1,1])
-x4, y4, z4 = descenteNewton(f3,g3,h3,0.009, [0,-0.5])
+#x4, y4, z4 = descenteNewton(f3,g3,h3,0.01, [-2,-0.5])
 
-ax.plot(x1, y1, z1, color = "orange")
+#x5, y5, z5 = descenteNewton(f3,g3,h3,0.01, [-2,1])
+#x6, y6, z6 = descenteNewton(f3,g3,h3,0.01, [0,0])
+
+'''ax.plot(x1, y1, z1, color = "orange")
 ax.plot(x2, y2, z2, color = "r")
 ax.plot(x3, y3, z3, color = "yellow")
-ax.plot(x4, y4, z4, color = "green")
+#ax.plot(x4, y4, z4, color = "green")
+#ax.plot(x5, y5, z5, color = "pink")
+#ax.plot(x6, y6, z6, color = "purple")
 plt.show()
+'''
