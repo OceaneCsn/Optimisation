@@ -66,7 +66,7 @@ def HLM(H, lamb):
 
 
 
-def methode_LM(a0, x, y, f, gradf, hessf, lam0=0.001, kmax=100, stopd=10**(-15), precision = 0.0001,  rall=False, print_step=False):
+def methode_LM(a0, x, y, f, gradf, hessf, lam0=0.001, kmax=100, stopd=10**(-15), precision = 0.000001,  rall=False, print_step=True):
   lam = lam0
   k = 0
 
@@ -76,8 +76,9 @@ def methode_LM(a0, x, y, f, gradf, hessf, lam0=0.001, kmax=100, stopd=10**(-15),
   as_ = [a]
   ds_ = []
   la_ = [lam]
+  fs = []
 
-  while k < kmax :#and np.linalg.norm(d)>stopd and abs(f(x, y, a)-f(x, y, last_a))>precision:
+  while k < kmax and np.linalg.norm(d)>stopd :#and abs(f(x, y, a)-f(x, y, last_a))>precision:
     last_a = a
     G = gradf(x, y, a)
     H = HLM(hessf(x, y, a), lam)
@@ -92,6 +93,7 @@ def methode_LM(a0, x, y, f, gradf, hessf, lam0=0.001, kmax=100, stopd=10**(-15),
       print ("G : ",G)
       print ("H : ",H)
       print ("lam : ",lam)
+      print ("k : ",k)
 
 
     if f(x, y, at) < f(x, y, a):
@@ -102,10 +104,11 @@ def methode_LM(a0, x, y, f, gradf, hessf, lam0=0.001, kmax=100, stopd=10**(-15),
     as_.append(a)
     ds_.append(d)
     la_.append(lam)
+    fs.append(f(x, y, at))
 
     k+=1
   if rall :
-    return as_, ds_, la_
+    return as_, ds_, la_, fs
   else :
     return a, k
 
@@ -133,11 +136,41 @@ def data_manip2(d):
 
 #initial data
 
+
+
+
+
+
+
+#ax.plot(x, y, '+', color = "blue")
+#ax.plot(x, g(x, a), color='red', linewidth=2)
+
+
+
+# initial conditions
+
+a0 = (1.5,1.5)
+
 a = (2.0,3.0)
-b = 0.01
+b = 0.001
+x, y1 = data(a, b)
+x, y2 = data(a, 0.005)
+x, y3 = data(a, 0.01)
+x, y4 = data(a, 0.05)
+x, y5 = data(a, 0.1)
 
-x, y = data(a, b)
+af1, k1 = methode_LM(a0, x, y1, f, gradf, hessf, kmax = 100, precision = 10**(-10),  rall = False, print_step=True)
+af2, k2 = methode_LM(a0, x, y2, f, gradf, hessf, kmax = 100, precision = 10**(-10),  rall = False, print_step=True)
+af3, k3 = methode_LM(a0, x, y3, f, gradf, hessf, kmax = 100, precision = 10**(-10),  rall = False, print_step=True)
+af4, k4 = methode_LM(a0, x, y4, f, gradf, hessf, kmax = 100, precision = 10**(-10),  rall = False, print_step=True)
+af5, k5 = methode_LM(a0, x, y5, f, gradf, hessf, kmax = 100, precision = 10**(-10),  rall = False, print_step=True)
 
+az, dz1, lz1, fz1 = methode_LM(a0, x, y1, f, gradf, hessf,  precision = 10**(-10), kmax = 50,rall = True)
+az, dz2, lz2, fz2 = methode_LM(a0, x, y2, f, gradf, hessf,  precision = 10**(-10), kmax = 50,rall = True)
+az, dz3, lz3, fz3 = methode_LM(a0, x, y3, f, gradf, hessf,  precision = 10**(-10), kmax = 50,rall = True)
+az, dz4, lz4, fz4 = methode_LM(a0, x, y4, f, gradf, hessf,  precision = 10**(-10), kmax = 50,rall = True)
+az, dz5, lz5, fz5 = methode_LM(a0, x, y5, f, gradf, hessf,  precision = 10**(-10), kmax = 50,rall = True)
+# EVERYTHING ELSE
 
 #Definition of what to plot
 fig = plt.figure() #opens a figure environment
@@ -147,38 +180,43 @@ X = np.arange(-5, 5.0, 0.25) #x range
 Y = np.arange(-5, 5.0, 0.25) #y range
 X, Y = np.meshgrid(X, Y) #creates a rectangular grid on which to plot the function values (Z)
 
+dz1 = data_manip(dz1)
+dz2 = data_manip(dz2)
+dz3 = data_manip(dz3)
+dz4 = data_manip(dz4)
+dz5 = data_manip(dz5)
 
+ax.plot(range(len(lz1)), lz1, color = "purple", label = 'b = 0.001')
+ax.plot(range(len(lz2)), lz2, color = "blue", label = 'b = 0.005')
+ax.plot(range(len(lz1)),lz3, color = "green", label = 'b = 0.01')
+#ax.plot(range(len(lz1)), lz4, color = "orange", label = 'b = 0.05')
+#ax.plot(range(len(lz1)), lz5, color = "red", label = 'b = 0.1')
+plt.legend()
 
-ax.plot(x, y, '+')
-#ax.plot(x, g(x, a), color='red', linewidth=2)
-
-
-
-# initial conditions
-
-a0 = (1.5,1.5)
-
-af, k = methode_LM(a0, x, y, f, gradf, hessf, kmax = 100, precision = 10**(-10),  rall = False, print_step=True)
-
-az, dz, lz = methode_LM(a0, x, y, f, gradf, hessf,  precision = 10**(-10), kmax = 50,rall = True)
-# EVERYTHING ELSE
-
-
+'''
 az1, az2 = data_manip2(az)
 
-fig2 = plt.figure()
-plt.title("convergence de a")
-ax2 = fig2.gca()
-ax2.plot(range(len(az1)), az1)
-ax2.plot(range(len(az2)), az2, color='red')
 
-dz1 = data_manip(dz)
+fig2 = plt.figure()
+plt.title("Fonction f de cout au cours du temps")
+ax2 = fig2.gca()
+ax2.plot(range(len(fz)), fz)'''
+#ax2.plot(range(len(az2)), az2, color='green')
+
+#dz1 = data_manip(dz)
 
 fig3 = plt.figure()
 plt.title("Norme de la direction de descente")
 ax3 = fig3.gca()
-ax3.plot(range(len(dz1)), dz1)
+ax3.plot(x, g(x,af1), color = "purple", label = 'b = 0.001')
+ax3.plot(x, g(x,af2),color = "blue", label = 'b = 0.005')
+ax3.plot(x, g(x,af3), color = "green", label = 'b = 0.01')
+ax3.plot(x, g(x,af4), color = "orange", label = 'b = 0.05')
+ax3.plot(x, g(x,af5), color = "red", label = 'b = 0.1')
+plt.legend()
 
+#ax3.plot(range(len(dz1)), dz1)
+'''
 fig4 = plt.figure()
 plt.title("Valeur de lambda")
 ax4 = fig4.gca()
@@ -187,15 +225,15 @@ ax4.plot(range(len(lz)), lz)
 
 #plot des courbes de tous les a
 for i,ai in enumerate(az[1:]):
-  ax.plot(x, g(x,ai), color=(0,0, 1-0.08*i), linewidth=1)
+  ax.plot(x, g(x,ai), color=( 0.7-0.01*i, 0.7-0.01*i, 0.7-0.01*i), linewidth=1)
 
 
 # plot du a final
 #ax.plot(x, g(x, a), color='red', linewidth=2)
-ax.plot(x, g(x, af), 'k--', color='deepblue', linewidth=4)
+ax.plot(x, g(x, af), color='darkgreen', linewidth=2)
 
-
-
+#plt.title("Fonction g au fil des itérations")
+'''
 
 
 plt.show()
