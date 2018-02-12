@@ -152,12 +152,12 @@ def data_manip2(d):
 a0 = (1.5,1.5)
 
 a = (2.0,3.0)
-b = 0.001
+b = 0.01
 x, y1 = data(a, b)
-x, y2 = data(a, 0.005)
-x, y3 = data(a, 0.01)
-x, y4 = data(a, 0.05)
-x, y5 = data(a, 0.1)
+x, y2 = data(a, 0.05)
+x, y3 = data(a, 0.1)
+x, y4 = data(a, 0.5)
+x, y5 = data(a, 0.7)
 
 af1, k1 = methode_LM(a0, x, y1, f, gradf, hessf, kmax = 100, precision = 10**(-10),  rall = False, print_step=True)
 af2, k2 = methode_LM(a0, x, y2, f, gradf, hessf, kmax = 100, precision = 10**(-10),  rall = False, print_step=True)
@@ -172,7 +172,7 @@ az, dz4, lz4, fz4 = methode_LM(a0, x, y4, f, gradf, hessf,  precision = 10**(-10
 az, dz5, lz5, fz5 = methode_LM(a0, x, y5, f, gradf, hessf,  precision = 10**(-10), kmax = 50,rall = True)
 # EVERYTHING ELSE
 
-#Definition of what to plot
+'''#Definition of what to plot
 fig = plt.figure() #opens a figure environment
 #ax = fig.gca(projection='3d') #to perform a 3D plot
 ax = fig.gca() #to perform a 3D plot
@@ -184,9 +184,9 @@ dz1 = data_manip(dz1)
 dz2 = data_manip(dz2)
 dz3 = data_manip(dz3)
 dz4 = data_manip(dz4)
-dz5 = data_manip(dz5)
+dz5 = data_manip(dz5)'''
 
-ax.plot(range(len(lz1)), lz1, color = "purple", label = 'b = 0.001')
+'''ax.plot(range(len(lz1)), lz1, color = "purple", label = 'b = 0.001')
 ax.plot(range(len(lz2)), lz2, color = "blue", label = 'b = 0.005')
 ax.plot(range(len(lz1)),lz3, color = "green", label = 'b = 0.01')
 #ax.plot(range(len(lz1)), lz4, color = "orange", label = 'b = 0.05')
@@ -197,24 +197,42 @@ plt.legend()
 az1, az2 = data_manip2(az)
 
 
-fig2 = plt.figure()
+'''fig2 = plt.figure()
 plt.title("Fonction f de cout au cours du temps")
 ax2 = fig2.gca()
-ax2.plot(range(len(fz)), fz)'''
+ax2.plot(range(len(fz)), fz)
 #ax2.plot(range(len(az2)), az2, color='green')
 
-#dz1 = data_manip(dz)
+#dz1 = data_manip(dz)'''
 
 fig3 = plt.figure()
-plt.title("Norme de la direction de descente")
+plt.title("Fonction g pour b = 0.01")
 ax3 = fig3.gca()
-ax3.plot(x, g(x,af1), color = "purple", label = 'b = 0.001')
-ax3.plot(x, g(x,af2),color = "blue", label = 'b = 0.005')
-ax3.plot(x, g(x,af3), color = "green", label = 'b = 0.01')
-ax3.plot(x, g(x,af4), color = "orange", label = 'b = 0.05')
-ax3.plot(x, g(x,af5), color = "red", label = 'b = 0.1')
-plt.legend()
+ax3.plot(x, g(x,af1), color = "purple", label = 'b = 0.01')
+ax3.plot(x, y1, '+', color = "purple")
 
+fig5 = plt.figure()
+plt.title("Fonction g pour b = 0.05")
+ax5 = fig5.gca()
+ax5.plot(x, g(x,af2),color = "blue")
+ax5.plot(x, y2, '+', color = "blue")
+fig4 = plt.figure()
+plt.title("Fonction g pour b = 0.1")
+ax4 = fig4.gca()
+ax4.plot(x, g(x,af3), color = "green", label = 'b = 0.1')
+ax4.plot(x, y3, '+', color = "green")
+fig2 = plt.figure()
+plt.title("Fonction g pour b = 0.5")
+ax2 = fig2.gca()
+ax2.plot(x, g(x,af4), color = "orange", label = 'b = 0.5')
+ax2.plot(x, y4, '+', color = "orange")
+fig = plt.figure()
+plt.title("Fonction g pour b = 0.7")
+ax = fig.gca()
+ax.plot(x, g(x,af5), color = "red", label = 'b = 0.7')
+ax.plot(x, y5, '+', color = "red")
+#plt.legend()
+plt.show()
 #ax3.plot(range(len(dz1)), dz1)
 '''
 fig4 = plt.figure()
