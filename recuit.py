@@ -193,8 +193,7 @@ def histogramme_mieux(tmax):
 def gen_villes(N, L):
 	return [[np.random.rand()*L, np.random.rand()*L,] for i in range(0,N)]
 	
-villes = gen_villes(10,10)
-print(len(villes))
+
 def gen_trajet(N):
 	res = [n for n in range(0, N)]
 	rd.shuffle(res)
@@ -211,21 +210,27 @@ def distance(villes, trajet):
 			d+=math.sqrt((c[0]-coord[i+1][0])**2+(c[1]-coord[i+1][1])**2)
 	return d
 		
-t = gen_trajet(10)
-print(distance(villes, t))
+#t = gen_trajet(10)
+#print(distance(villes, t))
 
-def voyageur(kappa, kappa2, tmax, dmax, villes):
+def voyageur(kappa, kappa2, tmax, dmax, villes, k):
+	fig = plt.figure()
+	ax = plt.subplot(111)
+	ax.plot([v[0] for v in villes], [v[1] for v in villes], 'ro', label = "Villes")
+	
 	x = gen_trajet(len(villes))
+	plt.plot([villes[i][0] for i in x], [villes[i][1] for i in x], label = "Trajet aléatoire")
 	t = 1
 	#xlist = []
 	dlist = []
 	d = dmax
 	while( t<tmax):
-		T = 1/t
-		pos1 = np.random.randint(0, len(villes)-1) 
+		T = 1/(t**3)
+		pos1 = np.random.randint(0, len(villes)) 
 		pos2 = pos1
 		while(pos2==pos1):
-			pos2 = np.random.randint(0, len(villes)-1) 
+			pos2 = np.random.randint(0, len(villes)) 
+		print(pos1, pos2)
 		sol = list(x)
 		sol[pos2], sol[pos1] = sol[pos1], sol[pos2]
 		if (distance(villes, sol) < distance(villes, x)):
@@ -235,15 +240,25 @@ def voyageur(kappa, kappa2, tmax, dmax, villes):
 			if(rd.random()<kappa2*np.exp(-1/1000*T)):
 				print("hey")
 				d = abs(distance(villes, sol) - distance(villes, x))
-				x = list(sol)
+				#x = list(sol)
 		t +=1
 		print(x, distance(villes,x))
-		#xlist.append(x)
+		if(t%k ==0):
+			ax.plot([villes[i][0] for i in x], [villes[i][1] for i in x], label = "Itération "+str(t))
+		
 		dlist.append(d)
 
 	print(x,distance(villes,x))
+	ax.plot([villes[i][0] for i in x], [villes[i][1] for i in x], linewidth = 3, label = "Chemin final")
+	plt.title('Chemins du voyageur de commerce')
+	chartBox = ax.get_position()
+	ax.set_position([chartBox.x0, chartBox.y0, chartBox.width*0.6, chartBox.height])
+	ax.legend(loc='upper center',bbox_to_anchor=(1.45, 0.8))
 	return x, dlist
 
 #print(gen_villes(10, 20))
-
-print(voyageur(10,0.005,10000,0.000001,villes)[0])
+villes = gen_villes(10,5)
+#plt.plot([v[0] for v in villes], [v[1] for v in villes], 'ro')
+voyageur(10,0.05,10000,0.000001,villes, 100)
+plt.show()
+#print(voyageur(10,0.005,10000,0.000001,villes)[0])
